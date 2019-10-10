@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">UnitConverter</string>
+    <string name="unit_kilometre">Километр</string>
+    <string name="unit_metre">Метр</string>
+    <string name="unit_centimetre">Сантиметр</string>
+    <string name="unit_sq_kilometre">Кв. километр</string>
+    <string name="unit_sq_metre">Кв. метр</string>
+    <string name="unit_sq_centimetre">Кв. сантиметр</string>
+
+    <string name="length">Длина</string>
+    <string name="area">Площадь</string>
+
+</resources>
