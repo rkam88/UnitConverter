@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ConverterActivity"
     android:orientation="horizontal">
 
     <LinearLayout
@@ -14,19 +12,17 @@
         android:orientation="vertical">
 
         <EditText
-            android:inputType="numberDecimal"
             android:id="@+id/input_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:text="Из"
-            />
+            android:inputType="numberDecimal"
+            tools:text="Из" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Из"
             android:layout_margin="@dimen/standardMargin"
-            />
+            android:text="Из" />
 
         <Spinner
             android:id="@+id/from_units_spinner"
@@ -36,7 +32,6 @@
     </LinearLayout>
 
 
-
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
@@ -44,19 +39,17 @@
         android:orientation="vertical">
 
         <EditText
-            android:inputType="numberDecimal"
             android:id="@+id/output_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:text="В"
-            />
+            android:inputType="numberDecimal"
+            tools:text="В" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="В"
             android:layout_margin="@dimen/standardMargin"
-            />
+            android:text="В" />
 
         <Spinner
             android:id="@+id/to_units_spinner"

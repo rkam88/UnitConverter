@@ -1,16 +1,19 @@
 package net.rusnet.sb.unitconverter;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 import net.rusnet.sb.unitconverter.models.Conversion;
 import net.rusnet.sb.unitconverter.models.Unit;
@@ -19,7 +22,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class ConverterActivity extends AppCompatActivity {
+public class ConverterFragment extends Fragment {
+
+    private final static String ARG_CONVERSION = "conversion";
+
+    public ConverterFragment() {
+        super(R.layout.fragment_converter);
+    }
+
+    public static ConverterFragment newInstance(Conversion conversion) {
+        Bundle args = new Bundle();
+        args.putSerializable(ARG_CONVERSION, conversion);
+        ConverterFragment fragment = new ConverterFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
 
     private EditText mInputEditText;
     private EditText mOutputEditText;
@@ -27,25 +45,24 @@ public class ConverterActivity extends AppCompatActivity {
     Spinner inputSpinner;
     Spinner outputSpinner;
 
-    private Conversion currentConversion;
+    private Conversion mCurrentConversion;
+    private View root;
 
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_converter);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        root = super.onCreateView(inflater, container, savedInstanceState);
 
-        Intent intent = getIntent();
-        Bundle extras = intent.getExtras();
-        currentConversion = (Conversion) extras.get(MainActivity.CONVERSION);
+        mCurrentConversion = (Conversion) getArguments().getSerializable(ARG_CONVERSION);
 
-        String[] unitList = getUnitList(currentConversion);
+        String[] unitList = getUnitList(mCurrentConversion);
 
         inputSpinner = initSpinner(unitList, R.id.from_units_spinner);
         outputSpinner = initSpinner(unitList, R.id.to_units_spinner);
 
-        mInputEditText = findViewById(R.id.input_edit_text);
+        mInputEditText = root.findViewById(R.id.input_edit_text);
 
-        mOutputEditText = findViewById(R.id.output_edit_text);
+        mOutputEditText = root.findViewById(R.id.output_edit_text);
 
         mInputEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -55,7 +72,7 @@ public class ConverterActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (getCurrentFocus() == mInputEditText) {
+                if (getActivity().getCurrentFocus() == mInputEditText) {
                     updateResult(mInputEditText, mOutputEditText);
                 }
             }
@@ -74,7 +91,7 @@ public class ConverterActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (getCurrentFocus() == mOutputEditText) {
+                if (getActivity().getCurrentFocus() == mOutputEditText) {
                     updateResult(mOutputEditText, mInputEditText, true);
                 }
             }
@@ -84,12 +101,13 @@ public class ConverterActivity extends AppCompatActivity {
 
             }
         });
-
+        return root;
     }
 
+
     private Spinner initSpinner(String[] unitList, int spinnerResourceID) {
-        Spinner spinner = (Spinner) findViewById(spinnerResourceID);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, unitList);
+        Spinner spinner = (Spinner) root.findViewById(spinnerResourceID);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(root.getContext(), android.R.layout.simple_list_item_1, unitList);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
         if (spinnerResourceID == R.id.to_units_spinner) {
@@ -98,7 +116,7 @@ public class ConverterActivity extends AppCompatActivity {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (getCurrentFocus() == mOutputEditText) {
+                if (getActivity().getCurrentFocus() == mOutputEditText) {
                     updateResult(mOutputEditText, mInputEditText, true);
                 } else {
                     updateResult(mInputEditText, mOutputEditText);
@@ -130,10 +148,10 @@ public class ConverterActivity extends AppCompatActivity {
                 sourceSpinner = inputSpinner;
                 targetSpinner = outputSpinner;
             }
-            double toBase = currentConversion.mUnits.get(sourceSpinner.getSelectedItemPosition()).mConversionToBase;
-            double fromBase = currentConversion.mUnits.get(targetSpinner.getSelectedItemPosition()).mConversionFromBase;
+            double toBase = mCurrentConversion.mUnits.get(sourceSpinner.getSelectedItemPosition()).mConversionToBase;
+            double fromBase = mCurrentConversion.mUnits.get(targetSpinner.getSelectedItemPosition()).mConversionFromBase;
             double result = sourceNumber * toBase * fromBase;
-            String textResult = String.format(Locale.US,"%f", result);
+            String textResult = String.format(Locale.US, "%f", result);
             targerEditText.setText(textResult);
         } else {
             targerEditText.setText("");

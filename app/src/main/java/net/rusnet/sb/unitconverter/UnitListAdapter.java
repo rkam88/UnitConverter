@@ -55,15 +55,7 @@ class UnitListAdapter
             mUnitName.setText(conversion.mLabelRes);
             itemView.setOnClickListener(v -> mMainItemClickListener.onMainItemCLick(conversion));
         }
-
     }
 
 }
-
-/*
-getAdaptePosition показывает по какому элементу произоел клик
-
-
- */
-
 
